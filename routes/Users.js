@@ -145,10 +145,10 @@ users.post('/login', (req, res) => {
            //res.json({ user })
         } else {
           // Passwords don't match
-          res.json({ error: 'wrong password' })
+          res.json("1")
         }
       } else {
-        res.json({ error: 'User does not exist' })
+        res.json("1")
       }
     })
     .catch(err => {
@@ -187,6 +187,20 @@ users.get('/getRole', (req, res) => {
       res.send('error: ' + err)
     })
 })
+users.post('/editUser/:user', (req, res) => {
+  const cardData = {
+    class: req.body.class,
+  }
+      User.findOneAndUpdate({ _id:req.params.user}, {$set:{ class: cardData.class }}, { new: true }).then(card => {
+
+        res.json({ status: "Done !" })
+    
+      })
+   
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
 users.get('/getRole/:email', (req, res) => {
 
   User.findOne({ email:req.params.email},'role')
@@ -200,6 +214,18 @@ users.get('/getRole/:email', (req, res) => {
     })
 })
 
+users.get('/getImage/:id', (req, res) => {
+
+  User.findOne({_id:req.params.id},'profileImg')
+
+    .then(user => {
+      res.send(user.profileImg)
+
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
 users.get('/getState/:email', (req, res) => {
 
   User.findOne({ email:req.params.email },'state')

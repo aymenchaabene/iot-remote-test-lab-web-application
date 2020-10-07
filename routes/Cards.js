@@ -48,6 +48,20 @@ cards.get('/getCardsByModel', (req, res) => {
       res.send('error: ' + err)
     })
 })
+cards.get('/getCardsByModel/:model', (req, res) => {
+
+  Card.find({ model: mongoose.Types.ObjectId(req.params.model) })
+
+    .then(cards => {
+     // console.log(mongoose.Types.ObjectId(req.body._id))
+
+      res.json({ cards })
+
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
 cards.get('/getCardById/:cardId', (req, res) => {
 
   Card.findOne({ _id: mongoose.Types.ObjectId(req.params.cardId) })
@@ -87,6 +101,7 @@ cards.post('/addCard', (req, res) => {
   const cardData = {
     name: req.body.name,
     model: req.body.model,
+    ip: req.body.ip,
     status: req.body.status,
     date: today,
   }
@@ -104,8 +119,9 @@ cards.post('/editCard/:cardId', (req, res) => {
     name: req.body.name,
     //model: req.body.model,
     status: req.body.status,
+    ip:req.body.ip,
   }
-      Card.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.cardId) }, { name: cardData.name },{ status: cardData.status }, { new: true }).then(card => {
+      Card.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.cardId) }, {$set:{ name: cardData.name , status: cardData.status,ip:cardData.ip }}, { new: true }).then(card => {
 
         res.json({ status: "Done !" })
     

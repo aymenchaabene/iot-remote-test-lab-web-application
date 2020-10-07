@@ -7,6 +7,10 @@ const CardSchema = new Schema({
         type: String,
         required: true
     },
+    ip: {
+        type: String,
+        required: true
+    },
     date: {
         type: Date,
         default: Date.now

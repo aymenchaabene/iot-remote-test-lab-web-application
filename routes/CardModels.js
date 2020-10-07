@@ -15,7 +15,7 @@ cardModels.post('/addModel', (req, res) => {
     description: req.body.description,
     image: "null",
     //cards:[],
-   
+
   }
 
   CardModel.findOne({
@@ -23,14 +23,14 @@ cardModels.post('/addModel', (req, res) => {
   })
     .then(cardModel => {
       if (!cardModel) {
-          CardModel.create(modelData)
-            .then(cardModel => {
-              res.json({ status: cardModel.name + '  Added!' })
-            })
-            .catch(err => {
-              res.send('error: ' + err)
-            })
-       
+        CardModel.create(modelData)
+          .then(cardModel => {
+            res.json({ status: cardModel.name + '  Added!' })
+          })
+          .catch(err => {
+            res.send('error: ' + err)
+          })
+
       } else {
         res.json({ error: 'Model already exists' })
       }
@@ -41,20 +41,55 @@ cardModels.post('/addModel', (req, res) => {
 })
 
 cardModels.get('/getModels', (req, res) => {
- CardModel.find()
-      .then(cardModel => {
-     
-          res.json({cardModel})
-        
-      })
-      .catch(err => {
-        res.send('error: ' + err)
-      })
+  CardModel.find()
+    .then(cardModel => {
+
+      res.json({ cardModel })
+
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
+cardModels.get('/getModel/:model', (req, res) => {
+  CardModel.findOne({ _id: req.params.model })
+    .then(cardModel => {
+
+      res.json({ cardModel })
+
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
+
+
+cardModels.post('/editModel/:model', (req, res) => {
+  const cardData = {
+    name: req.body.name,
+    //model: req.body.model,
+    description: req.body.description,
+  }
+  CardModel.findOneAndUpdate({ _id: req.params.model }, { $set: { name: cardData.name, description: cardData.description } }, { new: true }).then(card => {
+
+    res.json({ status: "Done !" })
+
   })
 
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
+cardModels.post('/deleteModel', (req, res) => {
+  CardModel.deleteOne({ _id: req.body._id }, { new: true }).then(card => {
 
+    res.json({ status: "Done !" })
 
-
+  })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
 
 
 module.exports = cardModels
